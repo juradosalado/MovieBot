@@ -66,7 +66,7 @@ def populate_movies():
                 actors, actor_id = add_many_to_many(actor_id, list_of_actors, actors_set, Actor)
                 movie.actors.set(actors)
 
-                list_of_genres = row[10].strip()
+                list_of_genres = row[10].strip().split('.')
                 genres, genre_id = add_many_to_many(genre_id, list_of_genres, genres_set, Genre)
                 movie.genres.set(genres)
 
