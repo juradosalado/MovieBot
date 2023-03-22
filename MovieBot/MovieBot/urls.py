@@ -21,4 +21,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('',views.index),
     path("populate/", views.populate_database),
+    path('webhook/', views.webhook, name='webhook'),
 ]

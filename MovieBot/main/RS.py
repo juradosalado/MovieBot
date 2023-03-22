@@ -55,10 +55,11 @@ def add_year_score(user_session):
 def add_duration_score(user_session):
     session_id = user_session.session_id
     duration = user_session.duration
+    print(duration)
     duration_relevance = user_session.duration_relevance
     for movie in movies:
         if movie.duration is not None:
-            if movie.duration <= duration:
+            if movie.duration <= int(duration):
                 if user_session in dictScores:
                     if movie in dictScores[user_session]:
                         dictScores[user_session][movie] += duration_relevance
@@ -96,6 +97,7 @@ def add_actors_score(user_session):
                     dictScores[user_session] = {movie: actors_relevance}
     user_session = UserSession.objects.get(session_id=session_id)
     user_session.is_waiting = False
+    user_session.save()
 
 def add_genres_score(user_session):
     session_id = user_session.session_id
