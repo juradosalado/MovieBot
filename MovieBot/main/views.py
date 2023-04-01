@@ -24,13 +24,15 @@ def populate_database(request):
     message = 'It has been loaded ' + str(m) + ' movies; ' + str(g) + ' genres; ' + str(a) + ' actors.'
     return render(request, 'base_POPULATEDB.html', {'title': 'End of database load', 'message':message})
 
+            
 def index(request):
     deleteOldUserSessions()
     return render(request, 'base_INDEX.html')
 
+
+
 @csrf_exempt
 def webhook(request):
-    print("Empeizan prints")
     print(request.session)
     # Get the session ID from the request
     req = json.loads(request.body)
@@ -55,10 +57,7 @@ def webhook(request):
     #get the entities from the request:
     parameters = req['queryResult']['parameters']
     #get the age:
-    print(parameters)
-    response= {
-        
-    }
+   
     if intent == 'UsuarioDaNombre':
         response = usuarioDaNombre(parameters, user_session)
     elif intent == 'UsuarioDaGenero':
@@ -85,4 +84,4 @@ def webhook(request):
         response = usuarioDaPuntuacion(parameters, user_session)
     elif intent == 'UsuarioDaPuntuacionRelevancia':
         response = usuarioDaPuntuacionRelevancia(parameters, user_session)
-    return JsonResponse(response)
+    return JsonResponse(response, safe=False)

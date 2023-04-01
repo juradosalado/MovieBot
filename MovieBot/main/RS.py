@@ -71,12 +71,12 @@ def add_duration_score(user_session):
                 if user_session in dictScores:
                     if movie in dictScores[user_session]:
                         #Se eliminará la relevancia si una peli dura 45 minutos más
-                        dictScores[user_session][movie] -= (duration - movie.duration) * duration_relevance / 45
+                        dictScores[user_session][movie] -= (movie.duration -duration) * duration_relevance / 45
                     else:
-                        dictScores[user_session][movie] = -(duration - movie.duration) * duration_relevance / 45
+                        dictScores[user_session][movie] = -(movie.duration-duration) * duration_relevance / 45
                 else:
                     dictScores[user_session] = dict()
-                    dictScores[user_session][movie] = -(duration - movie.duration) * duration_relevance / 45
+                    dictScores[user_session][movie] = (movie.duration-duration) * duration_relevance / 45
     user_session = UserSession.objects.get(session_id=session_id)
     user_session.is_waiting = False
     user_session.save()

@@ -88,6 +88,7 @@ def usuarioDaPuntuacion(parameters, user_session):
     }
     return response
 
+
 def usuarioDaPuntuacionRelevancia(parameters, user_session):
     session_id = user_session.session_id
     relevance = parameters['number-integer']
@@ -104,9 +105,47 @@ def usuarioDaPuntuacionRelevancia(parameters, user_session):
     user_session.save()
     add_ratings_score(user_session)
     dict_ordered = dict(list(sorted(dictScores[user_session].items(), key=lambda item: (-item[1])))[:20])
-    print(str(dict_ordered))
+    #get first film of dict_ordered:
+    top_films = list(dict_ordered.keys())[:3]
+    
+    # Crea una lista de diccionarios con la información de las películas
+    movie_data_list = []
+    movie_titles = ""
+
+    for film in top_films:
+        movie_titles += film.title + ", "
+        movie_data = {
+            "movie_cover": film.cover_url,
+            "movie_title": film.title,
+            "movie_synopsis": film.synopsis,
+            "movie_rating": film.imdb_rating,
+        }
+        movie_data_list.append(movie_data)
+
+    # Crea una lista de tarjetas para enviar a Telegram
+    telegram_cards = []
+    i=1
+    for movie_data in movie_data_list:
+        card = {
+            "card": {
+                "title": "#"+str(i)+" "+ movie_data["movie_title"],
+                "subtitle": movie_data["movie_synopsis"] + "\nImdb Rating: " + str(movie_data["movie_rating"]),
+                "imageUri": movie_data["movie_cover"],
+            },
+            "platform": "TELEGRAM",
+        }
+        telegram_cards.append(card)
+        i+=1
+
     response = {
-        'session': user_session.session_id
+        "fulfillmentMessages": [
+            {
+                "text": {
+                    "text": ["Tus recomendaciones son " + movie_titles],
+                },
+            },
+            *telegram_cards,
+        ],
     }
     return response
 
